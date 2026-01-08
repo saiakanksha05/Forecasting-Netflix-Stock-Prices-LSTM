@@ -1,0 +1,101 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Netflix Stock Price Predictor</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f4f4f4;
+        }
+        .container {
+            width: 40%;
+            margin: 60px auto;
+            background: white;
+            padding: 30px;
+            border-radius: 10px;
+            box-shadow: 0 0 10px rgba(0,0,0,0.1);
+        }
+        h2 {
+            text-align: center;
+        }
+        label {
+            font-weight: bold;
+        }
+        input {
+            width: 100%;
+            padding: 10px;
+            margin: 8px 0 20px 0;
+        }
+        button {
+            width: 100%;
+            padding: 12px;
+            background-color: #e50914;
+            color: white;
+            border: none;
+            font-size: 16px;
+            cursor: pointer;
+        }
+        button:hover {
+            background-color: #b20710;
+        }
+        #result {
+            text-align: center;
+            margin-top: 20px;
+            font-size: 18px;
+            font-weight: bold;
+        }
+    </style>
+</head>
+<body>
+
+<div class="container">
+    <h2>Netflix Stock Price Predictor</h2>
+
+    <label>Open Price</label>
+    <input type="number" id="open" step="any">
+
+    <label>High Price</label>
+    <input type="number" id="high" step="any">
+
+    <label>Low Price</label>
+    <input type="number" id="low" step="any">
+
+    <label>Volume</label>
+    <input type="number" id="volume" step="any">
+
+    <button onclick="predict()">Predict</button>
+
+    <div id="result"></div>
+</div>
+
+<script>
+function predict() {
+    const data = {
+        Open: document.getElementById("open").value,
+        High: document.getElementById("high").value,
+        Low: document.getElementById("low").value,
+        Volume: document.getElementById("volume").value
+    };
+
+    fetch("/predict", {
+        method: "POST",
+        headers: {
+            "Content-Type": "application/json"
+        },
+        body: JSON.stringify(data)
+    })
+    .then(response => response.json())
+    .then(result => {
+        document.getElementById("result").innerHTML =
+            "Predicted Closing Price: $" + result.predicted_price;
+    })
+    .catch(error => {
+        document.getElementById("result").innerHTML =
+            "Error predicting price";
+    });
+}
+</script>
+
+</body>
+</html>
